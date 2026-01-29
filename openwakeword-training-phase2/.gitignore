@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+__pycache__/
+*.pyc
+
+# Large Data & Models
+audioset_16k/
+fma/
+openwakeword_features_ACAV100M_2000_hrs_16bit.npy
+validation_set_features.npy
+melspectrogram.onnx
+embedding_model.onnx
+*.onnx
+*.tflite
+
+# Training Artifacts
+my_custom_model/
+training_work/
+piper-sample-generator/
+*.yaml
+
+# IDE Settings
+.vscode/
+.idea/

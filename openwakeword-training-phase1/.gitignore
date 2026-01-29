@@ -1,0 +1,15 @@
+# Virtual Environment
+venv/
+__pycache__/
+*.pyc
+
+# Generated Audio Data (Large files)
+positive_clips/
+tmp_raw/
+*.wav
+model_assets/
+bert_models/
+
+# IDE settings
+.vscode/
+.idea/

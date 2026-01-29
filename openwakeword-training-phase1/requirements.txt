@@ -1,0 +1,17 @@
+# Phase 1: Audio Generation Requirements
+# Needs newer PyTorch for Style-Bert-VITS2
+
+# Base packages
+numpy<2.0.0
+librosa
+soundfile
+huggingface_hub
+tqdm
+
+# TTS Engine
+style-bert-vits2>=2.5.0
+
+# PyTorch (CUDA 12.1 compatible)
+# Note: pip install commands in the script will handle the index-url for torch
+torch
+torchaudio

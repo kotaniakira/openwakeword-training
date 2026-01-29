@@ -1,0 +1,46 @@
+# Phase 2: Wake Word Training Requirements
+# Needs older PyTorch (2.1.2) for speechbrain compatibility
+
+# Core
+tqdm
+PyYAML
+requests
+pandas
+matplotlib
+
+# Audio & Math
+scipy
+scikit-learn
+librosa
+mutagen
+acoustics
+distance
+numpy<2.0.0
+
+# Text Processing
+jieba
+cn2an
+pypinyin
+pronouncing
+
+# Machine Learning / ONNX
+onnx==1.15.0
+onnxruntime-gpu
+onnx-tf
+tensorflow
+onnx2tf
+sng4onnx
+onnxsim
+onnx_graphsurgeon
+simple_onnx_processing_tools
+tf_keras
+psutil
+
+# PyTorch Ecosystem (Versions pinned in script, but listed here for reference)
+torch==2.1.2
+torchaudio==2.1.2
+torchinfo
+speechbrain
+torchmetrics
+audiomentations
+torch-audiomentations
