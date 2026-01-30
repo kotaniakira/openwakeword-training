@@ -101,32 +101,13 @@ def generate_audio(model_name, phrases, target_count):
         bert_models.load_model(Languages.JP, bert_dir)
 
         print("Loading TTS Model (JVNV-F1-JP)...")
-        if not os.path.exists(model_assets_dir):
-            print(f"Downloading model to {model_assets_dir}...")
-            snapshot_download(repo_id="litagin/style_bert_vits2_jvnv", local_dir=model_assets_dir)
-            
-        # パスの特定
-        config_path = None
-        model_file = None
-        style_vec = None
-        
-        for root, dirs, files in os.walk(model_assets_dir):
-            for f in files:
-                if f == "config.json":
-                    config_path = os.path.join(root, f)
-                elif f.endswith(".safetensors") and "jvnv-F1-jp" in f:
-                    model_file = os.path.join(root, f)
-                elif f == "style_vectors.npy":
-                    style_vec = os.path.join(root, f)
-        
-        if not (config_path and model_file and style_vec):
-            print("Error: Model files missing even after download.")
-            return
+        # Use hardcoded paths like generate_clips.py to avoid os.walk issues
+        base_model_dir = os.path.join(PROJECT_ROOT, "model_assets", "jvnv-F1-jp", "jvnv-F1-jp")
 
         model = TTSModel(
-            model_path=model_file,
-            config_path=config_path,
-            style_vec_path=style_vec,
+            model_path=os.path.join(base_model_dir, "jvnv-F1-jp_e160_s14000.safetensors"),
+            config_path=os.path.join(base_model_dir, "config.json"),
+            style_vec_path=os.path.join(base_model_dir, "style_vectors.npy"),
             device="cuda" if torch.cuda.is_available() else "cpu"
         )
     except Exception as e:
@@ -134,6 +115,7 @@ def generate_audio(model_name, phrases, target_count):
         return
 
     styles = list(model.style2id.keys())
+    speakers = list(model.spk2id.keys()) if hasattr(model, 'spk2id') else [0]
     
     current_count = len([f for f in os.listdir(output_dir) if f.endswith(".wav")])
     if current_count >= target_count:
@@ -147,6 +129,7 @@ def generate_audio(model_name, phrases, target_count):
         text = random.choice(phrases)
         style = random.choice(styles)
         speed = random.choice(SPEEDS)
+        speaker_id = random.choice(speakers) if isinstance(speakers[0], int) else model.spk2id[random.choice(speakers)]
         
         tmp_path = os.path.join(raw_dir, f"temp_{time.time()}_{random.randint(0,9999)}.wav")
         final_filename = f"{model_name}_{current_count+1:06d}.wav"
@@ -156,6 +139,7 @@ def generate_audio(model_name, phrases, target_count):
             sr, audio_data = model.infer(
                 text=text,
                 style=style,
+                speaker_id=speaker_id,
                 length=1.0/speed,
                 noise=0.6,
                 noise_w=0.8,
