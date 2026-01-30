@@ -94,6 +94,11 @@ def generate_audio(model_name, phrases, target_count):
         if not os.path.exists(bert_dir):
             print(f"Downloading BERT model to {bert_dir}...")
             snapshot_download(repo_id="ku-nlp/deberta-v2-large-japanese-char-wwm", local_dir=bert_dir)
+
+        # TTSモデルの準備
+        if not os.path.exists(model_assets_dir):
+            print(f"Downloading TTS model to {model_assets_dir}...")
+            snapshot_download(repo_id="litagin/style_bert_vits2_jvnv", local_dir=model_assets_dir)
         
         # BERTロード
         print(f"Loading BERT from {bert_dir}...")
@@ -101,8 +106,8 @@ def generate_audio(model_name, phrases, target_count):
         bert_models.load_model(Languages.JP, bert_dir)
 
         print("Loading TTS Model (JVNV-F1-JP)...")
-        # Use hardcoded paths like generate_clips.py to avoid os.walk issues
-        base_model_dir = os.path.join(PROJECT_ROOT, "model_assets", "jvnv-F1-jp", "jvnv-F1-jp")
+        # Use hardcoded paths as the repo structure is known
+        base_model_dir = os.path.join(model_assets_dir, "jvnv-F1-jp")
 
         model = TTSModel(
             model_path=os.path.join(base_model_dir, "jvnv-F1-jp_e160_s14000.safetensors"),
